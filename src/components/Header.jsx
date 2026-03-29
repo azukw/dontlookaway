@@ -3,12 +3,15 @@ import { SKINS } from "../utils/i18n";
 export function Header({
                            onHelpClick,
                            onBrandClick,
+                           onOpenSettings,
                            theme,
                            onToggleTheme,
                            skin,
                            onSkinChange,
                            language,
                            onLanguageChange,
+                           isMuted,
+                           onToggleMute,
                            t,
                        }) {
     return (
@@ -17,7 +20,7 @@ export function Header({
                 <span className="brand-word">DontLookAway</span>
             </button>
 
-            <div className="topbar-actions">
+            <div className="topbar-actions desktop-settings">
                 <div className="language-toggle" aria-label={t.languageLabel}>
                     <button
                         type="button"
@@ -60,10 +63,22 @@ export function Header({
                     {theme === "dark" ? t.light : t.dark}
                 </button>
 
+                <button type="button" className="ghost-button" onClick={onToggleMute}>
+                    {isMuted ? t.unmute : t.mute}
+                </button>
+
                 <button type="button" className="ghost-button" onClick={onHelpClick}>
                     {t.rules}
                 </button>
             </div>
+
+            <button
+                type="button"
+                className="mobile-settings-button"
+                onClick={onOpenSettings}
+            >
+                {t.settings}
+            </button>
         </header>
     );
 }

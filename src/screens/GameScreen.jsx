@@ -3,10 +3,15 @@ import { ArrowPad } from "../components/ArrowPad";
 import { SequenceDisplay } from "../components/SequenceDisplay";
 import { useKeyboardInput } from "../hooks/useKeyboardInput";
 import { useSwipeInput } from "../hooks/useSwipeInput";
+import { playRandomSound, playSound, unlockAudio } from "../utils/sounds";
 import { generateDailySequence, generateTrainingSequence } from "../utils/generateSequence";
 
 function getShowDuration(round) {
     return Math.max(105, 210 - round * 1.5);
+}
+
+function isVerticalDirection(direction) {
+    return direction === "up" || direction === "down";
 }
 
 function buildRunMetrics(stats) {
@@ -32,7 +37,7 @@ function buildRunMetrics(stats) {
     };
 }
 
-export function GameScreen({ mode, onGameOver, t }) {
+export function GameScreen({ mode, onGameOver, t, soundEnabled }) {
     const gameAreaRef = useRef(null);
     const timeoutIds = useRef([]);
     const statsRef = useRef({
@@ -109,7 +114,13 @@ export function GameScreen({ mode, onGameOver, t }) {
             for (let index = 0; index < currentRound; index += 1) {
                 if (cancelled) return;
 
-                pulseDirection(sequence[index]);
+                const direction = sequence[index];
+                const soundName = isVerticalDirection(direction)
+                    ? "show-vertical"
+                    : "show-horizontal";
+
+                playSound(soundName, { volume: 0.42 }, soundEnabled);
+                pulseDirection(direction);
                 await wait(getShowDuration(currentRound));
             }
 
@@ -126,7 +137,7 @@ export function GameScreen({ mode, onGameOver, t }) {
         return () => {
             cancelled = true;
         };
-    }, [currentRound, phase, pulseDirection, sequence]);
+    }, [currentRound, phase, pulseDirection, sequence, soundEnabled]);
 
     const finishRun = useCallback(
         (baseResult) => {
@@ -139,10 +150,12 @@ export function GameScreen({ mode, onGameOver, t }) {
     );
 
     const handleDirection = useCallback(
-        (direction) => {
+        async (direction) => {
             if (phase !== "input" || sequence.length === 0) {
                 return;
             }
+
+            await unlockAudio();
 
             const expectedDirection = sequence[playerIndex];
             if (!expectedDirection) return;
@@ -156,6 +169,11 @@ export function GameScreen({ mode, onGameOver, t }) {
                 statsRef.current.totalReactionMs += reactionMs;
                 lastInputAtRef.current = now;
 
+                const soundName = isVerticalDirection(direction)
+                    ? "correct-vertical"
+                    : "correct-horizontal";
+
+                playSound(soundName, { volume: 0.48 }, soundEnabled);
                 pulseDirection(direction);
 
                 const clearFlashTimeout = window.setTimeout(() => {
@@ -200,6 +218,12 @@ export function GameScreen({ mode, onGameOver, t }) {
                 return;
             }
 
+            playRandomSound(
+                ["error-1", "error-2", "error-3", "error-4"],
+                { volume: 0.55 },
+                soundEnabled
+            );
+
             setErrorDirection(direction);
             setPhase("gameOver");
 
@@ -224,6 +248,7 @@ export function GameScreen({ mode, onGameOver, t }) {
             playerIndex,
             pulseDirection,
             sequence,
+            soundEnabled,
         ]
     );
 
@@ -241,7 +266,7 @@ export function GameScreen({ mode, onGameOver, t }) {
     return (
         <section className="card game-card" ref={gameAreaRef}>
             <div className="game-topline">
-                <span>{mode === "daily" ? `Daily • ${dateKey}` : t.endless}</span>
+                <span>{mode === "daily" ? `${t.daily} • ${dateKey}` : t.endless}</span>
                 <span>
           {t.roundLabel} {currentRound}
         </span>

@@ -40,10 +40,14 @@ export const translations = {
     fr: {
         languageLabel: "Langue",
         skinLabel: "Skin",
+        settings: "Menu",
+        themeLabel: "Thème",
         rules: "Règles",
         close: "Fermer",
         light: "Clair",
         dark: "Sombre",
+        mute: "Muet",
+        unmute: "Son",
         dailyEyebrow: "Défi du jour",
         heroTitle: "Mémorise la séquence.",
         heroSubtitle:
@@ -63,7 +67,6 @@ export const translations = {
         endless: "Endless",
         roundLabel: "Round",
         observe: "Observe",
-        reproduce: "Reproduis",
         validated: "Validé",
         error: "Erreur",
         inputProgress: (current, total) => `Reproduis • ${current}/${total}`,
@@ -92,7 +95,7 @@ export const translations = {
         howToPlayIntro:
             "Une séquence de directions apparaît. Tu dois la reproduire sans faute.",
         helpResetNote: (countdown) =>
-            `Le défi quotidien change à minuit, heure de Paris. Prochain reset dans ${countdown}.`,
+            `Le défi quotidien change à minuit, heure de Paris.\nProchain reset dans ${countdown}.`,
         step1Title: "1. Observe",
         step1Desc: "Le jeu montre la séquence du round courant très rapidement.",
         step2Title: "2. Reproduis",
@@ -116,10 +119,14 @@ export const translations = {
     en: {
         languageLabel: "Language",
         skinLabel: "Skin",
+        settings: "Menu",
+        themeLabel: "Theme",
         rules: "Rules",
         close: "Close",
         light: "Light",
         dark: "Dark",
+        mute: "Mute",
+        unmute: "Sound",
         dailyEyebrow: "Daily challenge",
         heroTitle: "Memorize the sequence.",
         heroSubtitle:
@@ -139,7 +146,6 @@ export const translations = {
         endless: "Endless",
         roundLabel: "Round",
         observe: "Watch",
-        reproduce: "Repeat",
         validated: "Cleared",
         error: "Mistake",
         inputProgress: (current, total) => `Repeat • ${current}/${total}`,
@@ -168,7 +174,7 @@ export const translations = {
         howToPlayIntro:
             "A sequence of directions appears. You must reproduce it perfectly.",
         helpResetNote: (countdown) =>
-            `The daily challenge resets at midnight, Paris time. Next reset in ${countdown}.`,
+            `The daily challenge resets at midnight, Paris time.\nNext reset in ${countdown}.`,
         step1Title: "1. Watch",
         step1Desc: "The game shows the current round sequence very quickly.",
         step2Title: "2. Repeat",
