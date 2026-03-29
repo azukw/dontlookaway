@@ -35,9 +35,7 @@ export function GameOverScreen({ result, bestScore, onRetry, onMenu, t, language
             </p>
 
             {result.mode === "daily" && result.attemptNumber ? (
-                <p className="attempt-line">
-                    {t.attemptLine(formattedAttempt)}
-                </p>
+                <p className="attempt-line">{t.attemptLine(formattedAttempt)}</p>
             ) : null}
 
             <div className="results-grid">
@@ -93,7 +91,7 @@ export function GameOverScreen({ result, bestScore, onRetry, onMenu, t, language
                     </strong>
                 </div>
 
-                <div className="result-card">
+                <div className="result-card result-card-status">
                     <span className="result-label">{t.status}</span>
                     <strong className="result-value">
                         {result.perfectRun ? t.success : t.failure}

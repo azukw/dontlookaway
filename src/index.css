@@ -1411,3 +1411,203 @@ input {
         max-height: calc(100dvh - 20px);
     }
 }
+@media (max-width: 720px) {
+    .dialog-card {
+        width: min(100%, 380px);
+        max-height: calc(100dvh - 16px);
+        padding: 14px;
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+    .dialog-head {
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .dialog-content {
+        margin-top: 8px;
+        display: grid;
+        gap: 8px;
+    }
+
+    .dialog-kicker {
+        padding: 10px 12px;
+        border-radius: 14px;
+        font-size: 0.84rem;
+        line-height: 1.4;
+    }
+
+    .help-reset-note {
+        margin: 0;
+        font-size: 0.74rem;
+        line-height: 1.4;
+    }
+
+    .rules-grid,
+    .rules-controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 0;
+    }
+
+    .rules-step,
+    .rules-control-card {
+        min-height: 0;
+        padding: 10px;
+        border-radius: 14px;
+    }
+
+    .rules-step strong,
+    .rules-control-card strong {
+        margin-bottom: 5px;
+        font-size: 0.8rem;
+        line-height: 1.2;
+    }
+
+    .rules-step span,
+    .rules-control-card span {
+        font-size: 0.72rem;
+        line-height: 1.35;
+    }
+
+    .rules-grid .rules-step:last-child,
+    .rules-controls .rules-control-card:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .ghost-button {
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 420px) {
+    .dialog-overlay {
+        padding: 8px;
+    }
+
+    .dialog-card {
+        width: min(100%, 340px);
+        max-height: calc(100dvh - 12px);
+        padding: 12px;
+        border-radius: 16px;
+    }
+
+    .eyebrow {
+        margin-bottom: 6px;
+    }
+
+    .dialog-kicker {
+        padding: 8px 10px;
+        font-size: 0.78rem;
+    }
+
+    .help-reset-note {
+        font-size: 0.68rem;
+        line-height: 1.3;
+    }
+
+    .rules-grid,
+    .rules-controls {
+        gap: 6px;
+    }
+
+    .rules-step,
+    .rules-control-card {
+        padding: 8px;
+        border-radius: 12px;
+    }
+
+    .rules-step strong,
+    .rules-control-card strong {
+        font-size: 0.74rem;
+        margin-bottom: 4px;
+    }
+
+    .rules-step span,
+    .rules-control-card span {
+        font-size: 0.66rem;
+        line-height: 1.28;
+    }
+}
+
+@media (max-width: 720px) {
+    .game-over-card {
+        max-width: 360px;
+        padding: 14px 12px;
+    }
+
+    .game-over-card .hero-subtitle {
+        font-size: 0.82rem;
+        line-height: 1.4;
+        margin-top: 8px;
+    }
+
+    .game-over-card .attempt-line {
+        font-size: 0.8rem;
+        line-height: 1.35;
+        margin-top: 8px;
+    }
+
+    .game-over-card .score-number {
+        font-size: 3.2rem;
+        margin-top: 10px;
+    }
+
+    .game-over-card .results-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+    }
+
+    .game-over-card .result-card {
+        padding: 9px;
+        border-radius: 12px;
+        gap: 4px;
+    }
+
+    .game-over-card .result-label {
+        font-size: 0.62rem;
+    }
+
+    .game-over-card .result-value {
+        font-size: 0.84rem;
+    }
+
+    .game-over-card .result-card-status {
+        display: none;
+    }
+
+    .game-over-card .result-actions {
+        gap: 8px;
+        margin-top: 14px;
+    }
+}
+
+@media (max-width: 420px) {
+    .game-over-card {
+        max-width: 340px;
+        padding: 12px 10px;
+    }
+
+    .game-over-card .results-grid {
+        gap: 6px;
+    }
+
+    .game-over-card .result-card {
+        padding: 8px;
+    }
+
+    .game-over-card .result-label {
+        font-size: 0.58rem;
+    }
+
+    .game-over-card .result-value {
+        font-size: 0.8rem;
+    }
+
+    .game-over-card .hero-subtitle,
+    .game-over-card .attempt-line {
+        font-size: 0.76rem;
+    }
+}
