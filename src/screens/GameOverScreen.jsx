@@ -1,3 +1,7 @@
+import { useRef, useState } from "react";
+
+const SHARE_URL = "https://dla-daily.vercel.app";
+
 function formatAttemptNumber(value, language) {
     if (!value) return null;
 
@@ -15,8 +19,87 @@ function formatAttemptNumber(value, language) {
     return `${value}th`;
 }
 
+function getResultDate(result) {
+    return result.dateKey ?? new Date().toISOString().slice(0, 10);
+}
+
+function buildShareText(result, language, t) {
+    const date = getResultDate(result);
+
+    if (language === "fr") {
+        if (result.mode === "daily" && result.attemptNumber) {
+            return [
+                "DontLookAway — Daily",
+                date,
+                `Essai #${result.attemptNumber} • Score ${result.score}/100`,
+                SHARE_URL,
+            ].join("\n");
+        }
+
+        return [
+            `DontLookAway — ${result.mode === "daily" ? "Daily" : "Endless"}`,
+            date,
+            `Score ${result.score}/100`,
+            SHARE_URL,
+        ].join("\n");
+    }
+
+    if (result.mode === "daily" && result.attemptNumber) {
+        return [
+            "DontLookAway — Daily",
+            date,
+            `Attempt #${result.attemptNumber} • Score ${result.score}/100`,
+            SHARE_URL,
+        ].join("\n");
+    }
+
+    return [
+        `DontLookAway — ${result.mode === "daily" ? "Daily" : "Endless"}`,
+        date,
+        `Score ${result.score}/100`,
+        SHARE_URL,
+    ].join("\n");
+}
+
+async function copyTextToClipboard(text) {
+    if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+    }
+
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "absolute";
+    textarea.style.left = "-9999px";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+}
+
 export function GameOverScreen({ result, bestScore, onRetry, onMenu, t, language }) {
     const formattedAttempt = formatAttemptNumber(result.attemptNumber, language);
+    const [shareCopied, setShareCopied] = useState(false);
+    const shareTimeoutRef = useRef(null);
+
+    const handleShare = async () => {
+        try {
+            const shareText = buildShareText(result, language, t);
+            await copyTextToClipboard(shareText);
+            setShareCopied(true);
+
+            if (shareTimeoutRef.current) {
+                window.clearTimeout(shareTimeoutRef.current);
+            }
+
+            shareTimeoutRef.current = window.setTimeout(() => {
+                setShareCopied(false);
+            }, 1800);
+        } catch {
+            setShareCopied(false);
+        }
+    };
 
     return (
         <section className="card game-over-card">
@@ -100,11 +183,17 @@ export function GameOverScreen({ result, bestScore, onRetry, onMenu, t, language
             </div>
 
             <div className="result-actions">
-                <button type="button" className="button-primary" onClick={onRetry}>
-                    {t.retry}
-                </button>
+                <div className="result-actions-top">
+                    <button type="button" className="button-primary" onClick={onRetry}>
+                        {t.retry}
+                    </button>
 
-                <button type="button" className="button-secondary" onClick={onMenu}>
+                    <button type="button" className="button-secondary" onClick={handleShare}>
+                        {shareCopied ? t.copied : t.share}
+                    </button>
+                </div>
+
+                <button type="button" className="button-secondary result-menu-button" onClick={onMenu}>
                     {t.backToMenu}
                 </button>
             </div>

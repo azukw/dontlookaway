@@ -1611,3 +1611,37 @@ input {
         font-size: 0.76rem;
     }
 }
+
+.result-actions {
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.result-actions-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.result-menu-button {
+    width: 100%;
+}
+
+@media (max-width: 720px) {
+    .game-over-card .result-actions {
+        gap: 8px;
+        margin-top: 14px;
+    }
+
+    .game-over-card .result-actions-top {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 420px) {
+    .game-over-card .result-actions-top {
+        grid-template-columns: 1fr;
+    }
+}

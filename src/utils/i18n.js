@@ -117,6 +117,8 @@ export const translations = {
         enShort: "EN",
         menuLinkMindster: "Jouer à Mindster",
         menuLinkSupport: "Me soutenir",
+        share: "Partager",
+        copied: "Copié !",
     },
     en: {
         languageLabel: "Language",
@@ -198,5 +200,7 @@ export const translations = {
         enShort: "EN",
         menuLinkMindster: "Play Mindster",
         menuLinkSupport: "Support me",
+        share: "Share",
+        copied: "Copied!",
     },
 };
