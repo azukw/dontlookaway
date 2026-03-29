@@ -53,6 +53,25 @@ export function MenuScreen({ dailyLabel, resetCountdownLabel, onStart, t }) {
                     <span>{t.objectiveDesc}</span>
                 </div>
             </div>
+
+            <div className="menu-footer-links" aria-label="Liens externes">
+                <a
+                    className="menu-footer-link"
+                    href="https://mindster.fr"
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    {t.menuLinkMindster}
+                </a>
+                <a
+                    className="menu-footer-link"
+                    href="https://buymeacoffee.com/mindsters"
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    {t.menuLinkSupport}
+                </a>
+            </div>
         </section>
     );
 }

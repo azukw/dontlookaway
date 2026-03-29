@@ -115,6 +115,8 @@ export const translations = {
         quit: "Quitter",
         frShort: "FR",
         enShort: "EN",
+        menuLinkMindster: "Jouer à Mindster",
+        menuLinkSupport: "Me soutenir",
     },
     en: {
         languageLabel: "Language",
@@ -194,5 +196,7 @@ export const translations = {
         quit: "Leave",
         frShort: "FR",
         enShort: "EN",
+        menuLinkMindster: "Play Mindster",
+        menuLinkSupport: "Support me",
     },
 };
