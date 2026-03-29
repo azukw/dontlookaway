@@ -85,7 +85,16 @@ export function startLoop(name, options = {}, enabled = true) {
 
     if (!buffer) return null;
 
-    stopLoop(name);
+    const existing = activeLoops.get(name);
+    if (existing) {
+        if (options.volume != null) {
+            existing.gainNode.gain.value = options.volume;
+        }
+        if (options.playbackRate != null && existing.source?.playbackRate) {
+            existing.source.playbackRate.value = options.playbackRate;
+        }
+        return existing.source;
+    }
 
     if (context.state === "suspended") {
         context.resume().catch(() => {});

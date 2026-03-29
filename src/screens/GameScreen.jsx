@@ -4,7 +4,7 @@ import { SequenceDisplay } from "../components/SequenceDisplay";
 import { useKeyboardInput } from "../hooks/useKeyboardInput";
 import { useSwipeInput } from "../hooks/useSwipeInput";
 import { playRandomSound, playSound, unlockAudio } from "../utils/sounds";
-import { generateDailySequence, generateTrainingSequence } from "../utils/generateSequence";
+import { generateDailySequence, generateEndlessSequence } from "../utils/generateSequence";
 
 function getShowDuration(round) {
     return Math.max(105, 210 - round * 1.5);
@@ -86,7 +86,7 @@ export function GameScreen({ mode, onGameOver, t, soundEnabled }) {
             setSequence(dailyData.sequence);
             setDateKey(dailyData.dateKey);
         } else {
-            setSequence(generateTrainingSequence(100));
+            setSequence(generateEndlessSequence(100));
             setDateKey(undefined);
         }
 

@@ -31,7 +31,7 @@ export function MenuScreen({ dailyLabel, resetCountdownLabel, onStart, t }) {
                 <button
                     type="button"
                     className="button-secondary beat-button"
-                    onClick={() => onStart("training")}
+                    onClick={() => onStart("endless")}
                 >
                     {t.playEndless}
                 </button>

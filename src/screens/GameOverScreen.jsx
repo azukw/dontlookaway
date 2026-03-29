@@ -23,23 +23,36 @@ function getResultDate(result) {
     return result.dateKey ?? new Date().toISOString().slice(0, 10);
 }
 
-function buildShareText(result, language, t) {
+function buildShareText(result, language) {
     const date = getResultDate(result);
+
+    const scoreLabel = result.mode === "daily"
+        ? `${result.score}/100`
+        : String(result.score);
 
     if (language === "fr") {
         if (result.mode === "daily" && result.attemptNumber) {
             return [
                 "DontLookAway — Daily",
                 date,
-                `Essai #${result.attemptNumber} • Score ${result.score}/100`,
+                `Essai #${result.attemptNumber} • Score ${scoreLabel}`,
                 SHARE_URL,
             ].join("\n");
         }
 
+        if (result.mode === "daily") {
+            return [
+                "DontLookAway — Daily",
+                date,
+                `Score ${scoreLabel}`,
+                SHARE_URL,
+            ].join("\n");
+        }
+
+        // Endless: pas de date
         return [
-            `DontLookAway — ${result.mode === "daily" ? "Daily" : "Endless"}`,
-            date,
-            `Score ${result.score}/100`,
+            "DontLookAway — Endless",
+            `Score ${scoreLabel}`,
             SHARE_URL,
         ].join("\n");
     }
@@ -48,15 +61,24 @@ function buildShareText(result, language, t) {
         return [
             "DontLookAway — Daily",
             date,
-            `Attempt #${result.attemptNumber} • Score ${result.score}/100`,
+            `Attempt #${result.attemptNumber} • Score ${scoreLabel}`,
             SHARE_URL,
         ].join("\n");
     }
 
+    if (result.mode === "daily") {
+        return [
+            "DontLookAway — Daily",
+            date,
+            `Score ${scoreLabel}`,
+            SHARE_URL,
+        ].join("\n");
+    }
+
+    // Endless: no date
     return [
-        `DontLookAway — ${result.mode === "daily" ? "Daily" : "Endless"}`,
-        date,
-        `Score ${result.score}/100`,
+        "DontLookAway — Endless",
+        `Score ${scoreLabel}`,
         SHARE_URL,
     ].join("\n");
 }
@@ -85,7 +107,7 @@ export function GameOverScreen({ result, bestScore, onRetry, onMenu, t, language
 
     const handleShare = async () => {
         try {
-            const shareText = buildShareText(result, language, t);
+            const shareText = buildShareText(result, language);
             await copyTextToClipboard(shareText);
             setShareCopied(true);
 

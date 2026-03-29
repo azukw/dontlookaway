@@ -128,7 +128,7 @@ export function generateDailySequence(length = 100) {
     };
 }
 
-export function generateTrainingSequence(length = 100) {
+export function generateEndlessSequence(length = 100) {
     const seed = `endless-${Date.now()}-${Math.random()}`;
     return generateSequenceFromSeed(seed, length);
 }

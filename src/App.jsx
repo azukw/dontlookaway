@@ -32,7 +32,7 @@ function getStorageKey(mode, dateKey) {
         return `${STORAGE_PREFIX}-best-daily-${dateKey}`;
     }
 
-    return `${STORAGE_PREFIX}-best-training`;
+    return `${STORAGE_PREFIX}-best-endless`;
 }
 
 function readBestScore(mode, dateKey) {
@@ -89,7 +89,11 @@ function App() {
     const [sessionId, setSessionId] = useState(0);
     const [lastResult, setLastResult] = useState(null);
     const [bestScore, setBestScore] = useState(0);
-    const [panel, setPanel] = useState(null);
+    const [panel, setPanel] = useState(() => {
+        if (typeof window === "undefined") return null;
+        const seen = window.localStorage.getItem(RULES_SEEN_STORAGE_KEY);
+        return seen ? null : "help";
+    });
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [confirmExitOpen, setConfirmExitOpen] = useState(false);
     const [currentAttemptNumber, setCurrentAttemptNumber] = useState(null);
@@ -106,6 +110,7 @@ function App() {
 
     const preloadedRef = useRef(false);
     const lastUiResultKeyRef = useRef("");
+    const pendingModeRef = useRef(null);
 
     const todayKey = getTodayKey();
     const t = translations[language];
@@ -114,6 +119,8 @@ function App() {
         preloadSounds([
             { name: "menu-loop", url: "/sounds/menu-loop.wav" },
             { name: "game-loop", url: "/sounds/game-loop.wav" },
+            { name: "endless-loop", url: "/sounds/endless-loop.wav" },
+            { name: "results-loop", url: "/sounds/results-loop.wav" },
             { name: "daily-start", url: "/sounds/daily-start.wav" },
             { name: "endless-start-1", url: "/sounds/endless-start-1.wav" },
             { name: "endless-start-2", url: "/sounds/endless-start-2.wav" },
@@ -135,30 +142,24 @@ function App() {
         });
     }, []);
 
-    // Première visite: afficher le popup des règles
+    // Première visite: marquer les règles comme vues (sans setState dans un effect)
     useEffect(() => {
         if (typeof window === "undefined") return;
-        const seen = window.localStorage.getItem(RULES_SEEN_STORAGE_KEY);
-        if (!seen) {
-            setPanel("help");
+        if (panel === "help") {
             window.localStorage.setItem(RULES_SEEN_STORAGE_KEY, "true");
         }
-    }, []);
+    }, [panel]);
 
-    // Tenter de déverrouiller l'audio au chargement (si autorisé), sinon ça démarrera au premier geste.
     useEffect(() => {
         if (!soundsReady || isMuted) return;
 
         unlockAudio()
             .then(() => {
-                // La logique menu/playing (effects ci-dessous) s'occupe de lancer le bon loop.
             })
             .catch(() => {
-                // Certains navigateurs bloquent tant qu'il n'y a pas d'interaction utilisateur.
             });
     }, [soundsReady, isMuted]);
 
-    // Fallback: au premier clic/tap, déverrouiller l'audio et (re)lancer le loop si besoin.
     useEffect(() => {
         if (typeof window === "undefined") return;
 
@@ -170,14 +171,19 @@ function App() {
                     startLoop("menu-loop", { volume: 0.3 }, true);
                 }
                 if (screen === "playing") {
-                    startLoop("game-loop", { volume: 0.22 }, true);
+                    const effectiveMode = pendingModeRef.current ?? mode;
+                    const loopName = effectiveMode === "endless" ? "endless-loop" : "game-loop";
+                    startLoop(loopName, { volume: 0.22 }, true);
+                }
+                if (screen === "gameOver") {
+                    startLoop("results-loop", { volume: 0.26 }, true);
                 }
             }).catch(() => {});
         };
 
         window.addEventListener("pointerdown", tryUnlock, { once: true });
         return () => window.removeEventListener("pointerdown", tryUnlock);
-    }, [screen, isMuted, soundsReady]);
+    }, [screen, mode, isMuted, soundsReady]);
 
     useEffect(() => {
         if (typeof window === "undefined") return;
@@ -215,6 +221,8 @@ function App() {
     useEffect(() => {
         if (screen === "menu" && !isMuted && soundsReady) {
             stopLoop("game-loop");
+            stopLoop("endless-loop");
+            stopLoop("results-loop");
             startLoop("menu-loop", { volume: 0.3 }, true);
         } else {
             stopLoop("menu-loop");
@@ -224,9 +232,27 @@ function App() {
     useEffect(() => {
         if (screen === "playing" && !isMuted && soundsReady) {
             stopLoop("menu-loop");
-            startLoop("game-loop", { volume: 0.22 }, true);
+            stopLoop("results-loop");
+
+            const effectiveMode = pendingModeRef.current ?? mode;
+            const loopName = effectiveMode === "endless" ? "endless-loop" : "game-loop";
+            const otherLoopName = effectiveMode === "endless" ? "game-loop" : "endless-loop";
+            stopLoop(otherLoopName);
+            startLoop(loopName, { volume: 0.22 }, true);
         } else {
             stopLoop("game-loop");
+            stopLoop("endless-loop");
+        }
+    }, [screen, mode, isMuted, soundsReady]);
+
+    useEffect(() => {
+        if (screen === "gameOver" && !isMuted && soundsReady) {
+            stopLoop("menu-loop");
+            stopLoop("game-loop");
+            stopLoop("endless-loop");
+            startLoop("results-loop", { volume: 0.26 }, true);
+        } else {
+            stopLoop("results-loop");
         }
     }, [screen, isMuted, soundsReady]);
 
@@ -259,6 +285,7 @@ function App() {
     };
 
     const startGame = async (selectedMode) => {
+        pendingModeRef.current = selectedMode;
         await unlockAudio();
         stopAllLoops();
 
@@ -304,10 +331,12 @@ function App() {
     };
 
     const retryGame = async () => {
+        const nextMode = lastResult?.mode ?? mode;
+        pendingModeRef.current = nextMode;
+
         await unlockAudio();
         stopAllLoops();
 
-        const nextMode = lastResult?.mode ?? mode;
         setMode(nextMode);
 
         if (nextMode === "daily") {
@@ -353,6 +382,12 @@ function App() {
         setScreen("menu");
     };
 
+    useEffect(() => {
+        if (screen !== "playing") {
+            pendingModeRef.current = null;
+        }
+    }, [screen]);
+
     return (
         <div className="app-shell" data-theme={theme} data-skin={skin}>
             <Header
@@ -386,7 +421,11 @@ function App() {
                         if (screen === "menu") {
                             startLoop("menu-loop", { volume: 0.3 }, true);
                         } else if (screen === "playing") {
-                            startLoop("game-loop", { volume: 0.22 }, true);
+                            const effectiveMode = pendingModeRef.current ?? mode;
+                            const loopName = effectiveMode === "endless" ? "endless-loop" : "game-loop";
+                            startLoop(loopName, { volume: 0.22 }, true);
+                        } else if (screen === "gameOver") {
+                            startLoop("results-loop", { volume: 0.26 }, true);
                         }
                     });
                 }}
@@ -459,7 +498,11 @@ function App() {
                             if (screen === "menu") {
                                 startLoop("menu-loop", { volume: 0.3 }, true);
                             } else if (screen === "playing") {
-                                startLoop("game-loop", { volume: 0.22 }, true);
+                                const effectiveMode = pendingModeRef.current ?? mode;
+                                const loopName = effectiveMode === "endless" ? "endless-loop" : "game-loop";
+                                startLoop(loopName, { volume: 0.22 }, true);
+                            } else if (screen === "gameOver") {
+                                startLoop("results-loop", { volume: 0.26 }, true);
                             }
                         });
                     }}
