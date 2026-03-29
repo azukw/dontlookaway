@@ -98,6 +98,16 @@ DontLookAway takes inspiration from classic sequence-memory games such as **Simo
 
 ---
 
+## Freesound Licences
+
+Clubby Loopable excerpt of szegvari's Freesound 595383.flac by Timbre -- https://freesound.org/s/595698/ -- License: Attribution NonCommercial 4.0
+
+Loopable excerpt of szegvari's Freesound 595383.flac by Timbre -- https://freesound.org/s/595668/ -- License: Attribution NonCommercial 4.0
+
+Diisco time - Cinematic Disco Retro Music.wav by szegvari -- https://freesound.org/s/595383/ -- License: Creative Commons 0
+
+Diisco time - Cinematic Disco Retro Music.wav by szegvari -- https://freesound.org/s/595383/ -- License: Creative Commons 0
+
 <p align="center">
   <strong>Memorize faster. React cleaner. Come back tomorrow.</strong>
 </p>
