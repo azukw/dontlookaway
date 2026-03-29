@@ -1,4 +1,4 @@
 ﻿User-agent: *
 Allow: /
 
-Sitemap: https://dla-daily.vercel.app/ssitemap.xml
+Sitemap: https://dla-daily.vercel.app/sitemap.xml
