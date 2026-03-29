@@ -1368,18 +1368,26 @@ input {
     }
 
     .arrow-pad {
-        max-width: 232px;
+        max-width: 280px;
+    }
+
+    .arrow-pad-row {
+        gap: 14px;
+    }
+
+    .arrow-pad-row-bottom {
+        margin-top: 14px;
     }
 
     .arrow-button {
-        width: 62px;
-        min-height: 62px;
-        padding: 6px;
+        width: 72px;
+        min-height: 72px;
+        padding: 8px;
     }
 
     .arrow-button-icon {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
     }
 
     .results-grid {
@@ -1629,19 +1637,24 @@ input {
 }
 
 @media (max-width: 720px) {
-    .game-over-card .result-actions {
-        gap: 8px;
-        margin-top: 14px;
-    }
-
     .game-over-card .result-actions-top {
         grid-template-columns: 1fr 1fr;
         gap: 8px;
+    }
+
+    .game-over-card .result-actions-top > * {
+        min-width: 0;
     }
 }
 
 @media (max-width: 420px) {
     .game-over-card .result-actions-top {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .game-over-card .result-actions-top > * {
+        min-width: 0;
     }
 }
+

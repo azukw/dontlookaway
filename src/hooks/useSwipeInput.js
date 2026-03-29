@@ -1,46 +1,72 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export function useSwipeInput({
                                   active,
                                   targetRef,
                                   onDirection,
-                                  threshold = 30,
+                                  threshold = 42,
+                                  axisLockRatio = 1.22,
                               }) {
-    useEffect(() => {
-        if (!active || !targetRef.current) return;
+    const startRef = useRef({ x: 0, y: 0 });
+    const triggeredRef = useRef(false);
 
+    useEffect(() => {
         const element = targetRef.current;
-        let startX = 0;
-        let startY = 0;
+        if (!active || !element) return;
 
         const handleTouchStart = (event) => {
             const touch = event.changedTouches[0];
-            startX = touch.clientX;
-            startY = touch.clientY;
+            startRef.current = {
+                x: touch.clientX,
+                y: touch.clientY,
+            };
+            triggeredRef.current = false;
         };
 
-        const handleTouchEnd = (event) => {
-            const touch = event.changedTouches[0];
-            const deltaX = touch.clientX - startX;
-            const deltaY = touch.clientY - startY;
+        const handleTouchMove = (event) => {
+            if (triggeredRef.current) return;
 
-            if (Math.abs(deltaX) < threshold && Math.abs(deltaY) < threshold) {
+            const touch = event.changedTouches[0];
+            const deltaX = touch.clientX - startRef.current.x;
+            const deltaY = touch.clientY - startRef.current.y;
+
+            const absX = Math.abs(deltaX);
+            const absY = Math.abs(deltaY);
+
+            if (absX < threshold && absY < threshold) {
                 return;
             }
 
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (absX > absY * axisLockRatio) {
+                triggeredRef.current = true;
                 onDirection(deltaX > 0 ? "right" : "left");
-            } else {
+                return;
+            }
+
+            if (absY > absX * axisLockRatio) {
+                triggeredRef.current = true;
                 onDirection(deltaY > 0 ? "down" : "up");
             }
         };
 
+        const handleTouchEnd = () => {
+            triggeredRef.current = false;
+        };
+
+        const handleTouchCancel = () => {
+            triggeredRef.current = false;
+        };
+
         element.addEventListener("touchstart", handleTouchStart, { passive: true });
+        element.addEventListener("touchmove", handleTouchMove, { passive: true });
         element.addEventListener("touchend", handleTouchEnd, { passive: true });
+        element.addEventListener("touchcancel", handleTouchCancel, { passive: true });
 
         return () => {
             element.removeEventListener("touchstart", handleTouchStart);
+            element.removeEventListener("touchmove", handleTouchMove);
             element.removeEventListener("touchend", handleTouchEnd);
+            element.removeEventListener("touchcancel", handleTouchCancel);
         };
-    }, [active, onDirection, targetRef, threshold]);
+    }, [active, axisLockRatio, onDirection, targetRef, threshold]);
 }
