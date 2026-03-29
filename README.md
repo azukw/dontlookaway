@@ -104,9 +104,7 @@ Clubby Loopable excerpt of szegvari's Freesound 595383.flac by Timbre -- https:/
 
 Loopable excerpt of szegvari's Freesound 595383.flac by Timbre -- https://freesound.org/s/595668/ -- License: Attribution NonCommercial 4.0
 
-Diisco time - Cinematic Disco Retro Music.wav by szegvari -- https://freesound.org/s/595383/ -- License: Creative Commons 0
-
-Diisco time - Cinematic Disco Retro Music.wav by szegvari -- https://freesound.org/s/595383/ -- License: Creative Commons 0
+pluggnb happy cute piano and synth loop 80/160 bpm by simmys_recycle_bin -- https://freesound.org/s/757413/ -- License: Attribution 4.0
 
 <p align="center">
   <strong>Memorize faster. React cleaner. Come back tomorrow.</strong>
